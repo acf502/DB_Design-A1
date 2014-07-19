@@ -1,0 +1,81 @@
+SQL> /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+SQL> /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SQL> 	Title:		Assignment 1
+SQL> 	Script name:	solution6.sql
+SQL> 	Task:		6
+SQL> 	Created by:	Aaron C Foote
+SQL> 	Created on:	11th March 2014
+SQL> 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+SQL> /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+SQL> 
+SQL> SET ECHO ON
+SQL> SET FEEDBACK ON
+SQL> SET LINESIZE 200
+SQL> SET WRAP OFF
+SQL> 
+SQL> /*      trigger starts on update or insert
+SQL> 	     begin:
+SQL> 		     set variable to maximum count of position titles with shared employer and title
+SQL> 		     by joining to employer and grouping by shared employer name and title.
+SQL> 		     only do this for positions offered by one employer that have been
+SQL> 		     applied for by an applicant twice */
+SQL> CREATE OR REPLACE TRIGGER solution6
+  2  AFTER INSERT OR UPDATE ON Applies
+  3  DECLARE
+  4  	     TOTREF NUMBER(2);
+  5  BEGIN
+  6  	     SELECT MAX(COUNT(P.title))
+  7  	     INTO TOTREF
+  8  	     FROM Position P NATURAL JOIN Employer E
+  9  	     WHERE P.pnumber IN
+ 10  					     (	     SELECT A.pnumber
+ 11  						     FROM Applies A)
+ 12  	     GROUP BY ename, title;
+ 13  	     IF TOTREF > 1 THEN
+ 14  		     RAISE_APPLICATION_ERROR(-20001, 'Applicants can not be listed for the same position title by the same employer twice');
+ 15  	     END IF;
+ 16  END;
+ 17  /
+
+Trigger created.
+
+SQL> 
+SQL> INSERT INTO APPLIES VALUES( 000001, 00000002, TO_DATE('13-DEC-1999','DD-MON-YYYY') );
+
+1 row created.
+
+SQL>  /* new job type for employee 1*/
+SQL> 
+SQL> INSERT INTO APPLIES VALUES( 000001, 00000009, TO_DATE('13-DEC-1999','DD-MON-YYYY') );
+INSERT INTO APPLIES VALUES( 000001, 00000009, TO_DATE('13-DEC-1999','DD-MON-YYYY') )
+            *
+ERROR at line 1:
+ORA-20001: Applicants can not be listed for the same position title by the same employer twice 
+ORA-06512: at "SYSTEM.SOLUTION6", line 12 
+ORA-04088: error during execution of trigger 'SYSTEM.SOLUTION6' 
+
+
+SQL> /* same job type, same employer as above */
+SQL> 
+SQL> UPDATE APPLIES
+  2  SET pnumber = 00000007
+  3  WHERE anumber = 000003 AND pnumber = 00000006;
+
+1 row updated.
+
+SQL> /* role change is ok, same role but different employer */
+SQL> 
+SQL> UPDATE APPLIES
+  2  SET pnumber = 00000009
+  3  WHERE anumber = 000003 AND pnumber = 00000007;
+UPDATE APPLIES
+       *
+ERROR at line 1:
+ORA-20001: Applicants can not be listed for the same position title by the same employer twice 
+ORA-06512: at "SYSTEM.SOLUTION6", line 12 
+ORA-04088: error during execution of trigger 'SYSTEM.SOLUTION6' 
+
+
+SQL> /* now it is for the same role, from the same employer as existing application */
+SQL> 
+SQL> spool off

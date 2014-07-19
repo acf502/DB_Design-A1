@@ -1,0 +1,514 @@
+SQL> /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+SQL> /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SQL> 	Title:		Assignment 1
+SQL> 	Script name:	solution5.sql
+SQL> 	Task:		5
+SQL> 	Created by:	Aaron C Foote
+SQL> 	Created on:	11th March 2014
+SQL> 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+SQL> /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+SQL> 
+SQL> SET ECHO ON
+SQL> SET FEEDBACK ON
+SQL> SET HEADING ON
+SQL> SET PAGESIZE 3000
+SQL> 
+SQL> /* 1 */
+SQL> 
+SQL> 
+SQL> connect system/babaryba
+Connected.
+SQL> 
+SQL> SELECT * FROM V$INSTANCE;
+
+INSTANCE_NUMBER INSTANCE_NAME    HOST_NAME                                                        VERSION           STARTUP_T STATUS       PAR    THREAD# ARCHIVE LOG_SWITCH_WAIT LOGINS     SHU DATABASE_STATUS   INSTANCE_ROLE      ACTIVE_ST BLO     CON_ID INSTANCE_MO EDITION                          
+--------------- ---------------- ---------------------------------------------------------------- ----------------- --------- ------------ --- ---------- ------- --------------- ---------- --- ----------------- ------------------ --------- --- ---------- ----------- -------                          
+FAMILY                                                                                                                                                                                                                                                                                                      
+--------------------------------------------------------------------------------                                                                                                                                                                                                                            
+              1 db               DATA-PC40                                                        12.1.0.1.0        17-MAR-14 OPEN         NO           1 STOPPED                 ALLOWED    NO  ACTIVE            PRIMARY_INSTANCE   NORMAL    NO           0 REGULAR     EE                               
+                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                            
+
+1 row selected.
+
+SQL> 
+SQL> 
+SQL> /* 2 */
+SQL> 
+SQL> 
+SQL> connect csci315/csci315
+Connected.
+SQL> 
+SQL> BREAK ON TABLE_NAME
+SQL> 
+SQL> column TNAME format A20
+SQL> column CNAME format A40
+SQL> 
+SQL> /* SELECT A.TABLE_NAME TNAME, B.COLUMN_NAME CNAME, A.NUM_ROWS ROWCOUNT FROM USER_TABLES A JOIN USER_TAB_COLUMNS B ON A.TABLE_NAME = B.TABLE_NAME; */
+SQL> /* List tables and row count for each table */
+SQL> SELECT A.TABLE_NAME TNAME, A.NUM_ROWS ROWCOUNT FROM USER_TABLES A;
+
+TNAME                  ROWCOUNT                                                                                                                                                                                                                                                                             
+-------------------- ----------                                                                                                                                                                                                                                                                             
+LPTITLE                       6                                                                                                                                                                                                                                                                             
+LSTATE                        8                                                                                                                                                                                                                                                                             
+LSKILL                       11                                                                                                                                                                                                                                                                             
+APPLICANT                    10                                                                                                                                                                                                                                                                             
+SPOSSESSED                   18                                                                                                                                                                                                                                                                             
+POSITION                      7                                                                                                                                                                                                                                                                             
+SNEEDED                      18                                                                                                                                                                                                                                                                             
+APPLIES                      19                                                                                                                                                                                                                                                                             
+COURSEPASSED                 11                                                                                                                                                                                                                                                                             
+FEMPLOYER                    10                                                                                                                                                                                                                                                                             
+REFEREE                       5                                                                                                                                                                                                                                                                             
+REGION                        5                                                                                                                                                                                                                                                                             
+NATION                       25                                                                                                                                                                                                                                                                             
+PART                      60000                                                                                                                                                                                                                                                                             
+SUPPLIER                   3000                                                                                                                                                                                                                                                                             
+PARTSUPP                 240000                                                                                                                                                                                                                                                                             
+CUSTOMER                  45000                                                                                                                                                                                                                                                                             
+ORDERS                   450000                                                                                                                                                                                                                                                                             
+LINEITEM                1800093                                                                                                                                                                                                                                                                             
+
+19 rows selected.
+
+SQL> 
+SQL> /* List tables and column names for each table */
+SQL> SELECT A.TABLE_NAME TNAME, B.COLUMN_NAME CNAME FROM USER_TABLES A JOIN USER_TAB_COLUMNS B ON A.TABLE_NAME = B.TABLE_NAME;
+
+TNAME                CNAME                                                                                                                                                                                                                                                                                  
+-------------------- ----------------------------------------                                                                                                                                                                                                                                               
+SUPPLIER             S_SUPPKEY                                                                                                                                                                                                                                                                              
+SUPPLIER             S_NAME                                                                                                                                                                                                                                                                                 
+SUPPLIER             S_ADDRESS                                                                                                                                                                                                                                                                              
+SUPPLIER             S_NATIONKEY                                                                                                                                                                                                                                                                            
+SUPPLIER             S_PHONE                                                                                                                                                                                                                                                                                
+SUPPLIER             S_ACCTBAL                                                                                                                                                                                                                                                                              
+SUPPLIER             S_COMMENT                                                                                                                                                                                                                                                                              
+SPOSSESSED           A#                                                                                                                                                                                                                                                                                     
+SPOSSESSED           SNAME                                                                                                                                                                                                                                                                                  
+SPOSSESSED           SKILLLEVEL                                                                                                                                                                                                                                                                             
+SNEEDED              P#                                                                                                                                                                                                                                                                                     
+SNEEDED              SNAME                                                                                                                                                                                                                                                                                  
+SNEEDED              SKILLLEVEL                                                                                                                                                                                                                                                                             
+REGION               R_REGIONKEY                                                                                                                                                                                                                                                                            
+REGION               R_NAME                                                                                                                                                                                                                                                                                 
+REGION               R_COMMENT                                                                                                                                                                                                                                                                              
+REFEREE              A#                                                                                                                                                                                                                                                                                     
+REFEREE              FNAME                                                                                                                                                                                                                                                                                  
+REFEREE              LNAME                                                                                                                                                                                                                                                                                  
+REFEREE              PHONE#                                                                                                                                                                                                                                                                                 
+POSITION             P#                                                                                                                                                                                                                                                                                     
+POSITION             PTITLE                                                                                                                                                                                                                                                                                 
+POSITION             EMPLOYER                                                                                                                                                                                                                                                                               
+POSITION             SALARY                                                                                                                                                                                                                                                                                 
+POSITION             EXTRAS                                                                                                                                                                                                                                                                                 
+POSITION             SPECIFICATION                                                                                                                                                                                                                                                                          
+PARTSUPP             PS_PARTKEY                                                                                                                                                                                                                                                                             
+PARTSUPP             PS_SUPPKEY                                                                                                                                                                                                                                                                             
+PARTSUPP             PS_AVAILQTY                                                                                                                                                                                                                                                                            
+PARTSUPP             PS_SUPPLYCOST                                                                                                                                                                                                                                                                          
+PARTSUPP             PS_COMMENT                                                                                                                                                                                                                                                                             
+PART                 P_PARTKEY                                                                                                                                                                                                                                                                              
+PART                 P_NAME                                                                                                                                                                                                                                                                                 
+PART                 P_MFGR                                                                                                                                                                                                                                                                                 
+PART                 P_BRAND                                                                                                                                                                                                                                                                                
+PART                 P_TYPE                                                                                                                                                                                                                                                                                 
+PART                 P_SIZE                                                                                                                                                                                                                                                                                 
+PART                 P_CONTAINER                                                                                                                                                                                                                                                                            
+PART                 P_RETAILPRICE                                                                                                                                                                                                                                                                          
+PART                 P_COMMENT                                                                                                                                                                                                                                                                              
+ORDERS               O_ORDERKEY                                                                                                                                                                                                                                                                             
+ORDERS               O_CUSTKEY                                                                                                                                                                                                                                                                              
+ORDERS               O_ORDERSTATUS                                                                                                                                                                                                                                                                          
+ORDERS               O_TOTALPRICE                                                                                                                                                                                                                                                                           
+ORDERS               O_ORDERDATE                                                                                                                                                                                                                                                                            
+ORDERS               O_ORDERPRIORITY                                                                                                                                                                                                                                                                        
+ORDERS               O_CLERK                                                                                                                                                                                                                                                                                
+ORDERS               O_SHIPPRIORITY                                                                                                                                                                                                                                                                         
+ORDERS               O_COMMENT                                                                                                                                                                                                                                                                              
+NATION               N_NATIONKEY                                                                                                                                                                                                                                                                            
+NATION               N_NAME                                                                                                                                                                                                                                                                                 
+NATION               N_REGIONKEY                                                                                                                                                                                                                                                                            
+NATION               N_COMMENT                                                                                                                                                                                                                                                                              
+LSTATE               STATE                                                                                                                                                                                                                                                                                  
+LSKILL               SKILL                                                                                                                                                                                                                                                                                  
+LPTITLE              TITLE                                                                                                                                                                                                                                                                                  
+LINEITEM             L_ORDERKEY                                                                                                                                                                                                                                                                             
+LINEITEM             L_PARTKEY                                                                                                                                                                                                                                                                              
+LINEITEM             L_SUPPKEY                                                                                                                                                                                                                                                                              
+LINEITEM             L_LINENUMBER                                                                                                                                                                                                                                                                           
+LINEITEM             L_QUANTITY                                                                                                                                                                                                                                                                             
+LINEITEM             L_EXTENDEDPRICE                                                                                                                                                                                                                                                                        
+LINEITEM             L_DISCOUNT                                                                                                                                                                                                                                                                             
+LINEITEM             L_TAX                                                                                                                                                                                                                                                                                  
+LINEITEM             L_RETURNFLAG                                                                                                                                                                                                                                                                           
+LINEITEM             L_LINESTATUS                                                                                                                                                                                                                                                                           
+LINEITEM             L_SHIPDATE                                                                                                                                                                                                                                                                             
+LINEITEM             L_COMMITDATE                                                                                                                                                                                                                                                                           
+LINEITEM             L_RECEIPTDATE                                                                                                                                                                                                                                                                          
+LINEITEM             L_SHIPINSTRUCT                                                                                                                                                                                                                                                                         
+LINEITEM             L_SHIPMODE                                                                                                                                                                                                                                                                             
+LINEITEM             L_COMMENT                                                                                                                                                                                                                                                                              
+FEMPLOYER            A#                                                                                                                                                                                                                                                                                     
+FEMPLOYER            EMPLOYER                                                                                                                                                                                                                                                                               
+FEMPLOYER            FROMDATE                                                                                                                                                                                                                                                                               
+FEMPLOYER            TODATE                                                                                                                                                                                                                                                                                 
+CUSTOMER             C_CUSTKEY                                                                                                                                                                                                                                                                              
+CUSTOMER             C_NAME                                                                                                                                                                                                                                                                                 
+CUSTOMER             C_ADDRESS                                                                                                                                                                                                                                                                              
+CUSTOMER             C_NATIONKEY                                                                                                                                                                                                                                                                            
+CUSTOMER             C_PHONE                                                                                                                                                                                                                                                                                
+CUSTOMER             C_ACCTBAL                                                                                                                                                                                                                                                                              
+CUSTOMER             C_MKTSEGMENT                                                                                                                                                                                                                                                                           
+CUSTOMER             C_COMMENT                                                                                                                                                                                                                                                                              
+COURSEPASSED         A#                                                                                                                                                                                                                                                                                     
+COURSEPASSED         CTITLE                                                                                                                                                                                                                                                                                 
+COURSEPASSED         INSTITUTION                                                                                                                                                                                                                                                                            
+COURSEPASSED         COMPDATE                                                                                                                                                                                                                                                                               
+COURSEPASSED         GRADE                                                                                                                                                                                                                                                                                  
+APPLIES              A#                                                                                                                                                                                                                                                                                     
+APPLIES              P#                                                                                                                                                                                                                                                                                     
+APPLIES              APPDATE                                                                                                                                                                                                                                                                                
+APPLICANT            A#                                                                                                                                                                                                                                                                                     
+APPLICANT            FNAME                                                                                                                                                                                                                                                                                  
+APPLICANT            LNAME                                                                                                                                                                                                                                                                                  
+APPLICANT            ADDRESS                                                                                                                                                                                                                                                                                
+APPLICANT            CITY                                                                                                                                                                                                                                                                                   
+APPLICANT            STATE                                                                                                                                                                                                                                                                                  
+APPLICANT            PHONE#                                                                                                                                                                                                                                                                                 
+APPLICANT            FAX#                                                                                                                                                                                                                                                                                   
+APPLICANT            EMAIL                                                                                                                                                                                                                                                                                  
+APPLICANT            ACOMMENT                                                                                                                                                                                                                                                                               
+
+102 rows selected.
+
+SQL> 
+SQL> /* 3 */
+SQL> 
+SQL> 
+SQL> connect system/babaryba
+Connected.
+SQL> 
+SQL> CREATE ROLE admin;
+
+Role created.
+
+SQL> GRANT CONNECT, RESOURCE TO admin;
+
+Grant succeeded.
+
+SQL> /* grant viewing of each table owned by CSCI315 */
+SQL> GRANT SELECT ON CSCI315.LPTITLE TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.LSTATE TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.LSKILL TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.APPLICANT TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.SPOSSESSED TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.POSITION TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.SNEEDED TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.APPLIES TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.COURSEPASSED TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.FEMPLOYER TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.REFEREE TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.REGION TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.NATION TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.PART TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.SUPPLIER TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.PARTSUPP TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.CUSTOMER TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.ORDERS TO admin;
+
+Grant succeeded.
+
+SQL> GRANT SELECT ON CSCI315.LINEITEM TO admin;
+
+Grant succeeded.
+
+SQL> 
+SQL> CREATE ROLE sales;
+
+Role created.
+
+SQL> GRANT CONNECT, RESOURCE TO sales;
+
+Grant succeeded.
+
+SQL> GRANT UPDATE, INSERT, DELETE ON CSCI315.ORDERS TO sales;
+
+Grant succeeded.
+
+SQL> GRANT UPDATE, INSERT, DELETE ON CSCI315.LINEITEM TO sales;
+
+Grant succeeded.
+
+SQL> 
+SQL> CREATE ROLE manager;
+
+Role created.
+
+SQL> GRANT CONNECT, RESOURCE TO manager;
+
+Grant succeeded.
+
+SQL> GRANT UPDATE, INSERT, DELETE ON CSCI315.CUSTOMER TO manager;
+
+Grant succeeded.
+
+SQL> GRANT UPDATE, INSERT, DELETE ON CSCI315.PART TO manager;
+
+Grant succeeded.
+
+SQL> GRANT CREATE VIEW TO manager;
+
+Grant succeeded.
+
+SQL> 
+SQL> GRANT admin TO sales;
+
+Grant succeeded.
+
+SQL> GRANT sales TO manager;
+
+Grant succeeded.
+
+SQL> 
+SQL> 
+SQL> /* 4 */
+SQL> 
+SQL> /* SELECT grantee, table_name, privilege FROM dba_tab_privs where grantee IN ('MANAGER', 'SALES', 'ADMIN');
+SQL> */
+SQL> 
+SQL> column role format A20
+SQL> column privilege format A40
+SQL> column table_name format A20
+SQL> 
+SQL> SELECT role, privilege FROM role_sys_privs WHERE role IN ('MANAGER', 'SALES', 'ADMIN');
+
+ROLE                 PRIVILEGE                                                                                                                                                                                                                                                                              
+-------------------- ----------------------------------------                                                                                                                                                                                                                                               
+MANAGER              CREATE VIEW                                                                                                                                                                                                                                                                            
+
+1 row selected.
+
+SQL> SELECT role, privilege, table_name FROM role_tab_privs WHERE role IN ('MANAGER', 'SALES', 'ADMIN') ORDER BY role, table_name, privilege;
+
+ROLE                 PRIVILEGE                                TABLE_NAME                                                                                                                                                                                                                                    
+-------------------- ---------------------------------------- --------------------                                                                                                                                                                                                                          
+ADMIN                SELECT                                   APPLICANT                                                                                                                                                                                                                                     
+ADMIN                SELECT                                   APPLIES                                                                                                                                                                                                                                       
+ADMIN                SELECT                                   COURSEPASSED                                                                                                                                                                                                                                  
+ADMIN                SELECT                                   CUSTOMER                                                                                                                                                                                                                                      
+ADMIN                SELECT                                   FEMPLOYER                                                                                                                                                                                                                                     
+ADMIN                SELECT                                   LINEITEM                                                                                                                                                                                                                                      
+ADMIN                SELECT                                   LPTITLE                                                                                                                                                                                                                                       
+ADMIN                SELECT                                   LSKILL                                                                                                                                                                                                                                        
+ADMIN                SELECT                                   LSTATE                                                                                                                                                                                                                                        
+ADMIN                SELECT                                   NATION                                                                                                                                                                                                                                        
+ADMIN                SELECT                                   ORDERS                                                                                                                                                                                                                                        
+ADMIN                SELECT                                   PART                                                                                                                                                                                                                                          
+ADMIN                SELECT                                   PARTSUPP                                                                                                                                                                                                                                      
+ADMIN                SELECT                                   POSITION                                                                                                                                                                                                                                      
+ADMIN                SELECT                                   REFEREE                                                                                                                                                                                                                                       
+ADMIN                SELECT                                   REGION                                                                                                                                                                                                                                        
+ADMIN                SELECT                                   SNEEDED                                                                                                                                                                                                                                       
+ADMIN                SELECT                                   SPOSSESSED                                                                                                                                                                                                                                    
+ADMIN                SELECT                                   SUPPLIER                                                                                                                                                                                                                                      
+MANAGER              DELETE                                   CUSTOMER                                                                                                                                                                                                                                      
+MANAGER              INSERT                                                                                                                                                                                                                                                                                 
+MANAGER              UPDATE                                                                                                                                                                                                                                                                                 
+MANAGER              DELETE                                   PART                                                                                                                                                                                                                                          
+MANAGER              INSERT                                                                                                                                                                                                                                                                                 
+MANAGER              UPDATE                                                                                                                                                                                                                                                                                 
+SALES                DELETE                                   LINEITEM                                                                                                                                                                                                                                      
+SALES                INSERT                                                                                                                                                                                                                                                                                 
+SALES                UPDATE                                                                                                                                                                                                                                                                                 
+SALES                DELETE                                   ORDERS                                                                                                                                                                                                                                        
+SALES                INSERT                                                                                                                                                                                                                                                                                 
+SALES                UPDATE                                                                                                                                                                                                                                                                                 
+
+31 rows selected.
+
+SQL> 
+SQL> /* 5 */
+SQL> 
+SQL> /* admin */
+SQL> CREATE USER administrator IDENTIFIED BY admin;
+
+User created.
+
+SQL> GRANT admin TO administrator;
+
+Grant succeeded.
+
+SQL> 
+SQL> /* sales */
+SQL> CREATE USER salesperson IDENTIFIED BY sales;
+
+User created.
+
+SQL> GRANT sales TO salesperson;
+
+Grant succeeded.
+
+SQL> 
+SQL> /* manager */
+SQL> CREATE USER managerman IDENTIFIED BY manager;
+
+User created.
+
+SQL> GRANT manager TO managerman;
+
+Grant succeeded.
+
+SQL> 
+SQL> /* 6 */
+SQL> 
+SQL> /* set quotas */
+SQL> ALTER USER administrator QUOTA 253M ON USERS;
+
+User altered.
+
+SQL> ALTER USER salesperson QUOTA 253M ON USERS;
+
+User altered.
+
+SQL> ALTER USER managerman QUOTA 253M ON USERS;
+
+User altered.
+
+SQL> 
+SQL> /* set tablespace */
+SQL> ALTER USER administrator DEFAULT TABLESPACE USERS;
+
+User altered.
+
+SQL> ALTER USER salesperson DEFAULT TABLESPACE USERS;
+
+User altered.
+
+SQL> ALTER USER managerman DEFAULT TABLESPACE USERS;
+
+User altered.
+
+SQL> 
+SQL> /* no tablespace on System means no access */
+SQL> ALTER USER administrator QUOTA 0M ON SYSTEM;
+
+User altered.
+
+SQL> ALTER USER salesperson QUOTA 0M ON SYSTEM;
+
+User altered.
+
+SQL> ALTER USER managerman QUOTA 0M ON SYSTEM;
+
+User altered.
+
+SQL> 
+SQL> /* 7 */
+SQL> 
+SQL> 
+SQL> CREATE PROFILE LIMITEDCONNECTIONS LIMIT SESSIONS_PER_USER 2;
+
+Profile created.
+
+SQL> 
+SQL> /* each user added to profile that limits conections for each user */
+SQL> ALTER USER administrator PROFILE LIMITEDCONNECTIONS;
+
+User altered.
+
+SQL> ALTER USER salesperson PROFILE LIMITEDCONNECTIONS;
+
+User altered.
+
+SQL> ALTER USER managerman PROFILE LIMITEDCONNECTIONS;
+
+User altered.
+
+SQL> 
+SQL> /* Remove all created users, profiles and roles, for cleaning */
+SQL> 
+SQL> DROP USER administrator CASCADE;
+
+User dropped.
+
+SQL> DROP USER salesperson CASCADE;
+
+User dropped.
+
+SQL> DROP USER managerman CASCADE;
+
+User dropped.
+
+SQL> 
+SQL> DROP PROFILE LIMITEDCONNECTIONS;
+
+Profile dropped.
+
+SQL> 
+SQL> DROP ROLE manager;
+
+Role dropped.
+
+SQL> DROP ROLE sales;
+
+Role dropped.
+
+SQL> DROP ROLE admin;
+
+Role dropped.
+
+SQL> 
+SQL> spool off
